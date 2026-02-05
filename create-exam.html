@@ -25,9 +25,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('background.jpg');
-            background-size: cover;
-            background-position: center;
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50, #4a6491);
             filter: blur(8px) brightness(0.7);
             opacity: 0.85;
             z-index: -2;
@@ -48,7 +46,6 @@
             z-index: -1;
         }
 
-        /* Header */
         .header {
             background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(20px);
@@ -66,12 +63,15 @@
             height: 60px;
             border-radius: 12px;
             overflow: hidden;
+            background: linear-gradient(135deg, #10b981, #047857);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+        .logo i {
+            font-size: 1.8rem;
+            color: white;
         }
 
         .back-btn {
@@ -92,7 +92,6 @@
             border-color: rgba(255, 255, 255, 0.25);
         }
 
-        /* Main Content */
         .main-content {
             max-width: 1000px;
             margin: 40px auto;
@@ -112,6 +111,13 @@
             font-size: 1.8rem;
             font-weight: 700;
             margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-title i {
+            color: rgba(16, 185, 129, 0.9);
         }
 
         .form-group {
@@ -153,10 +159,11 @@
             resize: vertical;
         }
 
-        /* Questions Section */
         .questions-section {
             margin-top: 40px;
             margin-bottom: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 30px;
         }
 
         .questions-header {
@@ -284,7 +291,6 @@
             border-color: rgba(255, 255, 255, 0.5);
         }
 
-        /* Submit Button */
         .submit-section {
             text-align: center;
             margin-top: 40px;
@@ -312,6 +318,35 @@
             transform: translateY(0);
         }
 
+        .alert {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.4s ease;
+        }
+
+        .alert.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #ecfdf5;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fef2f2;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
         @media (max-width: 768px) {
             .form-container {
                 padding: 30px 20px;
@@ -327,10 +362,9 @@
     <div class="background-image"></div>
     <div class="overlay"></div>
     
-    <!-- Header -->
     <header class="header">
         <div class="logo">
-            <img src="assets/qb-logo.ico" alt="Q-BLOCK Logo">
+            <i class="fas fa-graduation-cap"></i>
         </div>
         <button class="back-btn" onclick="window.history.back()">
             <i class="fas fa-arrow-left"></i>
@@ -338,10 +372,14 @@
         </button>
     </header>
 
-    <!-- Main Content -->
     <main class="main-content">
         <div class="form-container">
-            <h1 class="form-title">สร้างข้อสอบใหม่</h1>
+            <h1 class="form-title">
+                <i class="fas fa-edit"></i>
+                สร้างข้อสอบใหม่
+            </h1>
+            
+            <div id="alertBox"></div>
             
             <form id="examForm">
                 <div class="form-group">
@@ -358,16 +396,12 @@
                     <label for="examTime">เวลาในการทำข้อสอบ (นาที) <span style="color: #ef4444;">*</span></label>
                     <input type="number" id="examTime" class="form-control" placeholder="เช่น 60" min="1" required>
                 </div>
-                
-                <div class="form-group">
-                    <label for="examCode">รหัสห้องสอบ (สำหรับนักเรียนเข้า) <span style="color: #ef4444;">*</span></label>
-                    <input type="text" id="examCode" class="form-control" placeholder="เช่น MATH001" required>
-                </div>
 
                 <!-- Questions Section -->
                 <div class="questions-section">
                     <div class="questions-header">
                         <h2 style="color: rgba(255, 255, 255, 0.95); font-size: 1.3rem; font-weight: 600;">
+                            <i class="fas fa-question-circle"></i>
                             คำถาม
                         </h2>
                         <button type="button" class="add-question-btn" onclick="addQuestion()">
@@ -382,9 +416,9 @@
                 </div>
 
                 <div class="submit-section">
-                    <button type="submit" class="submit-btn">
+                    <button type="submit" class="submit-btn" id="submitBtn">
                         <i class="fas fa-save"></i>
-                        บันทึกข้อสอบ
+                        สร้างข้อสอบ
                     </button>
                 </div>
             </form>
@@ -393,6 +427,30 @@
 
     <script>
         let questionCount = 0;
+
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} show`;
+            alert.textContent = message;
+            alertBox.innerHTML = '';
+            alertBox.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 5000);
+        }
+
+        function showLoading(show) {
+            const submitBtn = document.getElementById('submitBtn');
+            if (show) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังสร้าง...';
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> สร้างข้อสอบ';
+            }
+        }
 
         function addQuestion() {
             questionCount++;
@@ -490,14 +548,99 @@
             e.preventDefault();
             
             const examTitle = document.getElementById('examTitle').value;
-            const examCode = document.getElementById('examCode').value;
+            const examDescription = document.getElementById('examDescription').value;
+            const examTime = document.getElementById('examTime').value;
             
-            alert(`สร้างข้อสอบสำเร็จ!\nชื่อข้อสอบ: ${examTitle}\nรหัสห้อง: ${examCode}`);
+            // Validate questions
+            const questionsCount = document.querySelectorAll('.question-card').length;
+            if (questionsCount === 0) {
+                showAlert('กรุณาเพิ่มอย่างน้อย 1 คำถาม', 'error');
+                return;
+            }
             
-            // In real app, save to database
+            showLoading(true);
+            
+            // Create exam object
+            const exam = {
+                exam_id: 'exam_' + Date.now(),
+                teacher_id: 'demo_teacher_001', // In real app, get from session
+                title: examTitle,
+                description: examDescription,
+                duration: parseInt(examTime),
+                questions: [],
+                created_at: new Date().toISOString()
+            };
+            
+            // Get all questions
+            document.querySelectorAll('.question-card').forEach((card, index) => {
+                const questionText = card.querySelector('textarea').value;
+                const questionType = card.querySelector('.type-btn.active').textContent.includes('ตัวเลือก') ? 'multiple_choice' : 'text';
+                
+                if (!questionText) {
+                    showAlert(`คำถามที่ ${index + 1} ยังไม่ได้กรอก`, 'error');
+                    showLoading(false);
+                    return;
+                }
+                
+                const question = {
+                    question_id: 'q' + (index + 1),
+                    text: questionText,
+                    type: questionType,
+                    points: 5
+                };
+                
+                if (questionType === 'multiple_choice') {
+                    const options = [];
+                    const optionInputs = card.querySelectorAll('.option-input');
+                    optionInputs.forEach(input => {
+                        if (input.value.trim()) {
+                            options.push(input.value.trim());
+                        }
+                    });
+                    
+                    const correctAnswer = card.querySelector(`input[name="correct-${index + 1}"]:checked`).value;
+                    
+                    question.options = options;
+                    question.correct_answer = parseInt(correctAnswer);
+                }
+                
+                exam.questions.push(question);
+            });
+            
+            // Save to localStorage
+            const exams = JSON.parse(localStorage.getItem('qblock_exams')) || [];
+            exams.push(exam);
+            localStorage.setItem('qblock_exams', JSON.stringify(exams));
+            
+            // Generate room code in format Q-BXXX
+            const randomDigits = Math.floor(100 + Math.random() * 900);
+            const roomCode = `Q-B${randomDigits}`;
+            
+            // Create room automatically
+            const room = {
+                room_id: 'room_' + Date.now(),
+                room_code: roomCode,
+                exam_id: exam.exam_id,
+                room_name: examTitle,
+                max_students: 50,
+                duration: exam.duration,
+                status: 'open',
+                start_time: null,
+                end_time: null,
+                participants: [],
+                created_at: new Date().toISOString()
+            };
+            
+            // Save room to localStorage
+            const rooms = JSON.parse(localStorage.getItem('qblock_rooms')) || [];
+            rooms.push(room);
+            localStorage.setItem('qblock_rooms', JSON.stringify(rooms));
+            
+            showAlert(`สร้างข้อสอบและห้องสอบสำเร็จ!\nรหัสห้องสอบ: ${roomCode}`, 'success');
+            
             setTimeout(() => {
                 window.location.href = 'dashboard.html';
-            }, 1500);
+            }, 2500);
         });
     </script>
 </body>
