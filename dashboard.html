@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>Q-BLOCK - Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <div class="background-image"></div>
+    <div class="overlay"></div>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <img src="assets/qb-logo.png" alt="Q-BLOCK Logo">
+        </div>
+        <div class="user-info">
+            <div class="user-details">
+                <div class="user-name" id="userName">Loading...</div>
+                <div class="user-role" id="userRole">Loading...</div>
+            </div>
+            <div class="user-avatar" id="userAvatar">U</div>
+            <button class="logout-btn" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <h1 class="welcome-title">ยินดีต้อนรับสู่ Q-BLOCK</h1>
+            <p class="welcome-subtitle">ระบบสร้างข้อสอบอัจฉริยะ พร้อมเทคโนโลยีป้องกันการทุจริต</p>
+        </section>
+
+        <!-- Stats Cards -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-value" id="totalUsers">0</div>
+                <div class="stat-label">ผู้ใช้งานทั้งหมด</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <div class="stat-value" id="totalStudents">0</div>
+                <div class="stat-label">นักเรียน</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+                <div class="stat-value" id="totalTeachers">0</div>
+                <div class="stat-label">ครูผู้สอน</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="stat-value" id="totalExams">0</div>
+                <div class="stat-label">ข้อสอบทั้งหมด</div>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="quick-actions">
+            <h2 class="section-title">
+                <i class="fas fa-bolt"></i>
+                การกระทำด่วน
+            </h2>
+            <div class="action-grid" id="actionGrid">
+                <!-- Actions will be loaded dynamically -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Help Button -->
+    <div class="help-btn" id="helpBtn">
+        <i class="fas fa-question"></i>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal" id="helpModal">
+        <div class="modal-content">
+            <div class="modal-close" id="closeModal">
+                <i class="fas fa-times"></i>
+            </div>
+            <h2>วิธีการใช้งาน Q-BLOCK</h2>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>สำหรับครูผู้สอน</h4>
+                        <p>คลิกปุ่ม <strong>"สร้างข้อสอบใหม่"</strong> เพื่อเริ่มสร้างข้อสอบ คุณสามารถเพิ่มคำถาม ตั้งค่าเวลา และกำหนดรหัสห้องสอบได้</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>สำหรับนักเรียน</h4>
+                        <p>คลิกปุ่ม <strong>"เข้าห้องสอบ"</strong> แล้วกรอกรหัสห้องสอบที่ครูให้มา เพื่อเริ่มทำข้อสอบ</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>การทำข้อสอบ</h4>
+                        <p>เมื่อเข้าห้องสอบแล้ว ระบบจะจับเวลาอัตโนมัติ และมีระบบป้องกันการโกง เช่น ตรวจจับการเปิดแท็บอื่น</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>การตรวจสอบผล</h4>
+                        <p>หลังทำข้อสอบเสร็จ ครูสามารถดูผลคะแนนและสถิติได้ทันที ส่วนนักเรียนจะเห็นคะแนนของตนเอง</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== CHECK AUTH STATE ==========
+        function checkAuth() {
+            const session = localStorage.getItem('qblock_session');
+            
+            if (!session) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            
+            return JSON.parse(session);
+        }
+
+        // ========== LOAD USER INFO ==========
+        function loadUserInfo() {
+            const user = checkAuth();
+            if (!user) return;
+            
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userRole').textContent = user.role === 'teacher' ? 'ครูผู้สอน' : 'นักเรียน';
+            
+            // Set avatar initial
+            const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            document.getElementById('userAvatar').textContent = initials;
+            
+            return user;
+        }
+
+        // ========== LOAD STATS ==========
+        function loadStats() {
+            // Get users from localStorage
+            const users = JSON.parse(localStorage.getItem('qblock_users')) || [];
+            
+            const totalUsers = users.length;
+            const totalStudents = users.filter(u => u.role === 'student').length;
+            const totalTeachers = users.filter(u => u.role === 'teacher').length;
+            
+            // Mock exam data (in real app, this would come from database)
+            const totalExams = 25; // Mock data
+            
+            document.getElementById('totalUsers').textContent = totalUsers;
+            document.getElementById('totalStudents').textContent = totalStudents;
+            document.getElementById('totalTeachers').textContent = totalTeachers;
+            document.getElementById('totalExams').textContent = totalExams;
+        }
+
+        // ========== LOAD ACTIONS ==========
+        function loadActions(user) {
+            const actionGrid = document.getElementById('actionGrid');
+            
+            if (user.role === 'teacher') {
+                // Teacher actions
+                actionGrid.innerHTML = `
+                    <div class="action-btn" onclick="window.location.href='create-exam.html'">
+                        <i class="fas fa-plus-circle"></i>
+                        <h3>สร้างข้อสอบใหม่</h3>
+                        <p>เริ่มสร้างข้อสอบแบบฟอร์ม Google</p>
+                    </div>
+                    
+                    <div class="action-btn" onclick="showExams()">
+                        <i class="fas fa-list"></i>
+                        <h3>ดูข้อสอบทั้งหมด</h3>
+                        <p>จัดการข้อสอบที่สร้างไว้</p>
+                    </div>
+                    
+                    <div class="action-btn" onclick="showResults()">
+                        <i class="fas fa-chart-bar"></i>
+                        <h3>ผลสอบ</h3>
+                        <p>ดูผลคะแนนและสถิติ</p>
+                    </div>
+                    
+                    <div class="action-btn" onclick="createRoom()">
+                        <i class="fas fa-door-open"></i>
+                        <h3>สร้างห้องสอบ</h3>
+                        <p>สร้างห้องสอบสำหรับนักเรียน</p>
+                    </div>
+                `;
+            } else {
+                // Student actions
+                actionGrid.innerHTML = `
+                    <div class="action-btn" onclick="joinExam()">
+                        <i class="fas fa-key"></i>
+                        <h3>เข้าห้องสอบ</h3>
+                        <p>กรอกรหัสเพื่อเข้าห้องสอบ</p>
+                    </div>
+                    
+                    <div class="action-btn" onclick="showMyExams()">
+                        <i class="fas fa-file-alt"></i>
+                        <h3>ข้อสอบของฉัน</h3>
+                        <p>ดูข้อสอบที่ทำไปแล้ว</p>
+                    </div>
+                    
+                    <div class="action-btn" onclick="showScores()">
+                        <i class="fas fa-award"></i>
+                        <h3>คะแนนของฉัน</h3>
+                        <p>ดูผลคะแนนทั้งหมด</p>
+                    </div>
+                `;
+            }
+        }
+
+        // ========== MODAL FUNCTIONS ==========
+        function openModal() {
+            document.getElementById('helpModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('helpModal').classList.remove('show');
+        }
+
+        // ========== ACTION FUNCTIONS ==========
+        function joinExam() {
+            const roomCode = prompt('กรอกรหัสห้องสอบ:');
+            if (roomCode) {
+                // In real app, validate room code and redirect
+                alert(`กำลังเข้าห้องสอบ: ${roomCode}`);
+                // window.location.href = `exam.html?code=${roomCode}`;
+            }
+        }
+
+        function createRoom() {
+            const roomName = prompt('ตั้งชื่อห้องสอบ:');
+            if (roomName) {
+                const roomCode = Math.random().toString(36).substr(2, 6).toUpperCase();
+                alert(`สร้างห้องสอบสำเร็จ!\nชื่อห้อง: ${roomName}\nรหัสห้อง: ${roomCode}`);
+            }
+        }
+
+        function showExams() {
+            alert('แสดงรายการข้อสอบทั้งหมด');
+        }
+
+        function showResults() {
+            alert('แสดงผลสอบและสถิติ');
+        }
+
+        function showMyExams() {
+            alert('แสดงข้อสอบของฉัน');
+        }
+
+        function showScores() {
+            alert('แสดงคะแนนของฉัน');
+        }
+
+        // ========== LOGOUT ==========
+        function logout() {
+            localStorage.removeItem('qblock_session');
+            window.location.href = 'login.html';
+        }
+
+        // ========== INIT ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = loadUserInfo();
+            if (user) {
+                loadStats();
+                loadActions(user);
+            }
+        });
+
+        // Event listeners
+        document.getElementById('helpBtn').addEventListener('click', openModal);
+        document.getElementById('closeModal').addEventListener('click', closeModal);
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+
+        // Close modal when clicking outside
+        document.getElementById('helpModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('helpModal')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>Q-BLOCK - เข้าสู่ระบบ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Manrope', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background: linear-gradient(135deg, #0f172a, #1e293b, #0f172a);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50, #4a6491);
+            filter: blur(8px) brightness(0.7);
+            opacity: 0.85;
+            z-index: -2;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                145deg,
+                rgba(16, 185, 129, 0.08),
+                rgba(5, 150, 105, 0.06),
+                rgba(20, 83, 45, 0.08)
+            );
+            z-index: -1;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            display: flex;
+            flex-direction: column;
+            padding: 50px 40px;
+            position: relative;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(16, 185, 129, 0.3),
+                transparent
+            );
+            z-index: 1;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 20px;
+            margin: 0 auto 25px;
+            overflow: hidden;
+            animation: gentleFloat 6s ease-in-out infinite;
+            background: linear-gradient(135deg, #10b981, #047857);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo i {
+            font-size: 3rem;
+            color: white;
+        }
+
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-4px); }
+        }
+
+        h1 {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            text-align: center;
+            margin-bottom: 35px;
+            font-weight: 300;
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 14px;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: rgba(16, 185, 129, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border: none;
+            position: relative;
+            overflow: hidden;
+            margin-top: 5px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255, 255, 255, 0.12),
+                transparent
+            );
+            transform: translateX(-100%);
+            transition: transform 0.7s;
+            z-index: 1;
+        }
+
+        .btn:hover::before {
+            transform: translateX(100%);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: rgba(16, 185, 129, 0.18);
+            color: #ecfdf5;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: rgba(16, 185, 129, 0.28);
+            border-color: rgba(16, 185, 129, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            margin-top: 15px;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .link-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .link-group a {
+            color: rgba(16, 185, 129, 0.9);
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .link-group a:hover {
+            opacity: 0.7;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.4s ease;
+        }
+
+        .alert.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #ecfdf5;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fef2f2;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .demo-credentials {
+            background: rgba(255, 255, 255, 0.08);
+            border-left: 4px solid rgba(16, 185, 129, 0.5);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .demo-credentials strong {
+            color: rgba(16, 185, 129, 0.9);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 40px 25px;
+                width: 95%;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .logo {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .logo i {
+                font-size: 2.5rem;
+            }
+            
+            .form-control {
+                padding: 12px 14px;
+                font-size: 0.95rem;
+            }
+            
+            .btn {
+                padding: 14px;
+                font-size: 1rem;
+            }
+            
+            .link-group {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-image"></div>
+    <div class="overlay"></div>
+    
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        
+        <h1>เข้าสู่ระบบ</h1>
+        <p class="subtitle">ยินดีต้อนรับกลับสู่ระบบ Q-BLOCK</p>
+        
+        <div id="alertBox"></div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">อีเมล</label>
+                <input type="email" id="email" class="form-control" placeholder="example@email.com" required autocomplete="email">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">รหัสผ่าน</label>
+                <input type="password" id="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+            </div>
+            
+            <div class="link-group">
+                <a href="register.html">สร้างบัญชีใหม่</a>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" id="loginBtn">เข้าสู่ระบบ</button>
+        </form>
+    <script>
+        // ========== SHA-256 Hash Function ==========
+        async function sha256(message) {
+            try {
+                const msgBuffer = new TextEncoder().encode(message);
+                const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+                return Array.from(new Uint8Array(hashBuffer))
+                    .map(b => b.toString(16).padStart(2, '0'))
+                    .join('');
+            } catch (error) {
+                console.error('Error hashing password:', error);
+                throw error;
+            }
+        }
+
+        // ========== Show Alert ==========
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} show`;
+            alert.textContent = message;
+            alertBox.innerHTML = '';
+            alertBox.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 5000);
+        }
+
+        // ========== Show Loading ==========
+        function showLoading(show) {
+            const loginBtn = document.getElementById('loginBtn');
+            if (show) {
+                loginBtn.disabled = true;
+                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังเข้าสู่ระบบ...';
+            } else {
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = 'เข้าสู่ระบบ';
+            }
+        }
+
+        // ========== Create Demo User ==========
+        async function createDemoUser() {
+            try {
+                const users = JSON.parse(localStorage.getItem('qblock_users')) || [];
+                
+                // Check if demo user exists
+                const demoTeacherExists = users.some(u => u.email === 'teacher@test.com');
+                const demoStudentExists = users.some(u => u.email === 'student@test.com');
+                
+                if (!demoTeacherExists) {
+                    const hashedPassword = await sha256('teacher123');
+                    const demoTeacher = {
+                        id: 'demo_teacher_001',
+                        name: 'ครูทดสอบ',
+                        email: 'teacher@test.com',
+                        password: hashedPassword,
+                        role: 'teacher',
+                        createdAt: new Date().toISOString()
+                    };
+                    users.push(demoTeacher);
+                    localStorage.setItem('qblock_users', JSON.stringify(users));
+                    console.log('✓ สร้างผู้ใช้ทดสอบสำหรับครูเรียบร้อย');
+                }
+                
+                if (!demoStudentExists) {
+                    const hashedPassword = await sha256('student123');
+                    const demoStudent = {
+                        id: 'demo_student_001',
+                        name: 'นักเรียนทดสอบ',
+                        email: 'student@test.com',
+                        password: hashedPassword,
+                        role: 'student',
+                        createdAt: new Date().toISOString()
+                    };
+                    users.push(demoStudent);
+                    localStorage.setItem('qblock_users', JSON.stringify(users));
+                    console.log('✓ สร้างผู้ใช้ทดสอบสำหรับนักเรียนเรียบร้อย');
+                }
+            } catch (error) {
+                console.error('Error creating demo user:', error);
+            }
+        }
+
+        // ========== Login Form ==========
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            
+            // Validation
+            if (!email || !password) {
+                showAlert('กรุณากรอกอีเมลและรหัสผ่าน', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showAlert('รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร', 'error');
+                return;
+            }
+            
+            // Show loading
+            showLoading(true);
+            
+            try {
+                // Get users from localStorage
+                const users = JSON.parse(localStorage.getItem('qblock_users')) || [];
+                
+                if (users.length === 0) {
+                    showAlert('ยังไม่มีผู้ใช้งานในระบบ กรุณาสมัครสมาชิกก่อน', 'error');
+                    showLoading(false);
+                    setTimeout(() => {
+                        window.location.href = 'register.html';
+                    }, 2000);
+                    return;
+                }
+                
+                // Hash password
+                const hashedPassword = await sha256(password);
+                
+                // Find user
+                const user = users.find(u => 
+                    u.email.toLowerCase() === email.toLowerCase() && 
+                    u.password === hashedPassword
+                );
+                
+                if (user) {
+                    // Save session
+                    const session = {
+                        userId: user.id,
+                        email: user.email,
+                        name: user.name,
+                        role: user.role,
+                        loginTime: new Date().toISOString()
+                    };
+                    
+                    localStorage.setItem('qblock_session', JSON.stringify(session));
+                    
+                    showAlert('เข้าสู่ระบบสำเร็จ!', 'success');
+                    
+                    // Redirect based on role
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                    
+                } else {
+                    showAlert('อีเมลหรือรหัสผ่านไม่ถูกต้อง', 'error');
+                    showLoading(false);
+                }
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                showAlert('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง', 'error');
+                showLoading(false);
+            }
+        });
+
+        // ========== Check if already logged in ==========
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Create demo users first
+                await createDemoUser();
+                
+                // Check session
+                const session = localStorage.getItem('qblock_session');
+                if (session) {
+                    const user = JSON.parse(session);
+                    showAlert(`ยินดีต้อนรับกลับ, ${user.name}!`, 'success');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
+                }
+            } catch (error) {
+                console.error('Error on page load:', error);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>เข้าห้องสอบ - Q-BLOCK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Manrope', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e293b, #0f172a);
+            min-height: 100vh;
+        }
+
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50, #4a6491);
+            filter: blur(8px) brightness(0.7);
+            opacity: 0.85;
+            z-index: -2;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                145deg,
+                rgba(16, 185, 129, 0.08),
+                rgba(5, 150, 105, 0.06),
+                rgba(20, 83, 45, 0.08)
+            );
+            z-index: -1;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #10b981, #047857);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 10px 20px;
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .main-content {
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .form-title {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .form-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 14px;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-align: center;
+            letter-spacing: 3px;
+            font-weight: 600;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: rgba(16, 185, 129, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .submit-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #10b981, #047857);
+            border: none;
+            padding: 16px 60px;
+            border-radius: 16px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .how-to-join {
+            background: rgba(255, 255, 255, 0.08);
+            border-left: 4px solid rgba(16, 185, 129, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .how-to-join h4 {
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 10px;
+        }
+
+        .how-to-join ol {
+            color: rgba(255, 255, 255, 0.8);
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+
+        .how-to-join li {
+            margin-bottom: 5px;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.4s ease;
+        }
+
+        .alert.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #ecfdf5;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fef2f2;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-image"></div>
+    <div class="overlay"></div>
+    
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <button class="back-btn" onclick="window.history.back()">
+            <i class="fas fa-arrow-left"></i>
+            กลับ
+        </button>
+    </header>
+
+    <main class="main-content">
+        <div class="form-container">
+            <h1 class="form-title">
+                <i class="fas fa-key"></i>
+                เข้าห้องสอบ
+            </h1>
+            <p class="form-subtitle">กรอกรหัสห้องสอบที่ครูให้มา</p>
+            
+            <div id="alertBox"></div>
+            
+            <form id="joinForm">
+                <div class="form-group">
+                    <label for="roomCode">รหัสห้องสอบ <span style="color: #ef4444;">*</span></label>
+                    <input type="text" id="roomCode" class="form-control" placeholder="XXXXXX" maxlength="6" required>
+                </div>
+                
+                <div class="submit-section">
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i class="fas fa-door-open"></i>
+                        เข้าห้องสอบ
+                    </button>
+                </div>
+            </form>
+            
+            <div class="how-to-join">
+                <h4><i class="fas fa-info-circle"></i> วิธีเข้าห้องสอบ</h4>
+                <ol>
+                    <li>ขอรหัสห้องสอบจากครูผู้สอน</li>
+                    <li>กรอกรหัสห้องสอบ 6 ตัวอักษร</li>
+                    <li>กดปุ่ม "เข้าห้องสอบ"</li>
+                    <li>เริ่มทำข้อสอบได้ทันที</li>
+                </ol>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} show`;
+            alert.textContent = message;
+            alertBox.innerHTML = '';
+            alertBox.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 5000);
+        }
+
+        function showLoading(show) {
+            const submitBtn = document.getElementById('submitBtn');
+            if (show) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบ...';
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-door-open"></i> เข้าห้องสอบ';
+            }
+        }
+
+        // Auto uppercase for room code
+        document.getElementById('roomCode').addEventListener('input', function(e) {
+            this.value = this.value.toUpperCase();
+        });
+
+        // Form submit
+        document.getElementById('joinForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const roomCode = document.getElementById('roomCode').value.trim().toUpperCase();
+            
+            if (roomCode.length !== 6) {
+                showAlert('รหัสห้องสอบต้องมี 6 ตัวอักษร', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
+            // Get rooms from localStorage
+            const rooms = JSON.parse(localStorage.getItem('qblock_rooms')) || [];
+            const room = rooms.find(r => r.room_code === roomCode);
+            
+            if (!room) {
+                showAlert('ไม่พบห้องสอบนี้ กรุณาตรวจสอบรหัสอีกครั้ง', 'error');
+                showLoading(false);
+                return;
+            }
+            
+            if (room.status !== 'open') {
+                showAlert('ห้องสอบนี้ปิดอยู่ ไม่สามารถเข้าได้', 'error');
+                showLoading(false);
+                return;
+            }
+            
+            // Get exam info
+            const exams = JSON.parse(localStorage.getItem('qblock_exams')) || [];
+            const exam = exams.find(e => e.exam_id === room.exam_id);
+            
+            if (!exam) {
+                showAlert('ไม่พบข้อมูลข้อสอบ', 'error');
+                showLoading(false);
+                return;
+            }
+            
+            // Add student to room
+            const session = JSON.parse(localStorage.getItem('qblock_session'));
+            const studentId = session.userId;
+            const studentName = session.name;
+            
+            // Check if student already joined
+            const alreadyJoined = room.participants.some(p => p.student_id === studentId);
+            
+            if (!alreadyJoined) {
+                room.participants.push({
+                    student_id: studentId,
+                    student_name: studentName,
+                    joined_at: new Date().toISOString(),
+                    started_at: null,
+                    completed_at: null,
+                    score: null,
+                    answers: []
+                });
+                
+                // Update room in localStorage
+                const roomIndex = rooms.findIndex(r => r.room_code === roomCode);
+                rooms[roomIndex] = room;
+                localStorage.setItem('qblock_rooms', JSON.stringify(rooms));
+            }
+            
+            showAlert('เข้าห้องสอบสำเร็จ! กำลังนำคุณไปยังหน้าทำข้อสอบ...', 'success');
+            
+            setTimeout(() => {
+                // Redirect to take exam page
+                window.location.href = `take-exam.html?room_code=${roomCode}`;
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

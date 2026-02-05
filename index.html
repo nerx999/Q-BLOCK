@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>Q-BLOCK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <div class="background-image"></div>
+    <div class="overlay"></div>
+    
+    <div class="container">
+        <div class="logo">
+            <img src="assets/qb-logo.ico" alt="Q-BLOCK Logo">
+        </div>
+        <h1>WELCOME TO Q-BLOCK</h1>
+        <p>ระบบสร้างข้อสอบอัจฉริยะพร้อมเทคโนโลยีป้องกันการทุจริต ออกแบบมาเพื่อการเรียนรู้ที่โปร่งใสและมีประสิทธิภาพ</p>
+        <div class="button-group">
+            <a href="login.html" class="btn teacher">Login</a>
+            <a href="register.html" class="btn student">Register</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('mousemove', (e) => {
+            const logo = document.querySelector('.logo');
+            const rect = logo.getBoundingClientRect();
+            const logoCenterX = rect.left + rect.width / 2;
+            const logoCenterY = rect.top + rect.height / 2;
+            
+            const mouseX = e.clientX - logoCenterX;
+            const mouseY = e.clientY - logoCenterY;
+            
+            const rotateX = (mouseY / 20) * -1;
+            const rotateY = mouseX / 20;
+            
+            logo.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+        
+        document.querySelector('.logo').addEventListener('mouseleave', () => {
+            document.querySelector('.logo').style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+        });
+    </script>
+</body>
+</html>

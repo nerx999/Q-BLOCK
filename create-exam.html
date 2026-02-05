@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>สร้างข้อสอบ - Q-BLOCK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Manrope', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e293b, #0f172a);
+            min-height: 100vh;
+        }
+
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: blur(8px) brightness(0.7);
+            opacity: 0.85;
+            z-index: -2;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                145deg,
+                rgba(16, 185, 129, 0.08),
+                rgba(5, 150, 105, 0.06),
+                rgba(20, 83, 45, 0.08)
+            );
+            z-index: -1;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 10px 20px;
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
+            padding: 40px;
+        }
+
+        .form-title {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 14px;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: rgba(16, 185, 129, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Questions Section */
+        .questions-section {
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .questions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .add-question-btn {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 10px 20px;
+            border-radius: 12px;
+            color: rgba(16, 185, 129, 0.9);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .add-question-btn:hover {
+            background: rgba(16, 185, 129, 0.25);
+            border-color: rgba(16, 185, 129, 0.5);
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .question-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            color: rgba(16, 185, 129, 0.9);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .delete-question {
+            background: rgba(239, 68, 68, 0.15);
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .delete-question:hover {
+            background: rgba(239, 68, 68, 0.25);
+            transform: scale(1.1);
+        }
+
+        .delete-question i {
+            color: rgba(239, 68, 68, 0.9);
+            font-size: 1.1rem;
+        }
+
+        .question-type {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .type-btn {
+            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .type-btn.active {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: rgba(16, 185, 129, 0.9);
+        }
+
+        .options-container {
+            margin-top: 15px;
+        }
+
+        .option-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .option-input {
+            flex: 1;
+        }
+
+        .add-option-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px dashed rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .add-option-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Submit Button */
+        .submit-section {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #10b981, #047857);
+            border: none;
+            padding: 16px 60px;
+            border-radius: 16px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 30px 20px;
+            }
+            
+            .question-card {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-image"></div>
+    <div class="overlay"></div>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <img src="assets/qb-logo.ico" alt="Q-BLOCK Logo">
+        </div>
+        <button class="back-btn" onclick="window.history.back()">
+            <i class="fas fa-arrow-left"></i>
+            กลับ
+        </button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="form-container">
+            <h1 class="form-title">สร้างข้อสอบใหม่</h1>
+            
+            <form id="examForm">
+                <div class="form-group">
+                    <label for="examTitle">ชื่อข้อสอบ <span style="color: #ef4444;">*</span></label>
+                    <input type="text" id="examTitle" class="form-control" placeholder="เช่น ข้อสอบวิชาคณิตศาสตร์ บทที่ 1" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="examDescription">คำอธิบายข้อสอบ</label>
+                    <textarea id="examDescription" class="form-control" placeholder="อธิบายเกี่ยวกับข้อสอบนี้"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="examTime">เวลาในการทำข้อสอบ (นาที) <span style="color: #ef4444;">*</span></label>
+                    <input type="number" id="examTime" class="form-control" placeholder="เช่น 60" min="1" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="examCode">รหัสห้องสอบ (สำหรับนักเรียนเข้า) <span style="color: #ef4444;">*</span></label>
+                    <input type="text" id="examCode" class="form-control" placeholder="เช่น MATH001" required>
+                </div>
+
+                <!-- Questions Section -->
+                <div class="questions-section">
+                    <div class="questions-header">
+                        <h2 style="color: rgba(255, 255, 255, 0.95); font-size: 1.3rem; font-weight: 600;">
+                            คำถาม
+                        </h2>
+                        <button type="button" class="add-question-btn" onclick="addQuestion()">
+                            <i class="fas fa-plus"></i>
+                            เพิ่มคำถาม
+                        </button>
+                    </div>
+                    
+                    <div id="questionsContainer">
+                        <!-- Questions will be added here dynamically -->
+                    </div>
+                </div>
+
+                <div class="submit-section">
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-save"></i>
+                        บันทึกข้อสอบ
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        let questionCount = 0;
+
+        function addQuestion() {
+            questionCount++;
+            
+            const questionHTML = `
+                <div class="question-card" id="question-${questionCount}">
+                    <div class="question-card-header">
+                        <div class="question-number">คำถามที่ ${questionCount}</div>
+                        <button type="button" class="delete-question" onclick="deleteQuestion(${questionCount})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>คำถาม <span style="color: #ef4444;">*</span></label>
+                        <textarea class="form-control" placeholder="พิมพ์คำถามที่นี่..." required></textarea>
+                    </div>
+                    
+                    <div class="question-type">
+                        <button type="button" class="type-btn active" onclick="setQuestionType(${questionCount}, 'multiple')">
+                            <i class="fas fa-list"></i> ตัวเลือกหลายข้อ
+                        </button>
+                        <button type="button" class="type-btn" onclick="setQuestionType(${questionCount}, 'short')">
+                            <i class="fas fa-text-height"></i> ตอบสั้น
+                        </button>
+                        <button type="button" class="type-btn" onclick="setQuestionType(${questionCount}, 'long')">
+                            <i class="fas fa-paragraph"></i> ตอบยาว
+                        </button>
+                    </div>
+                    
+                    <div class="options-container" id="options-${questionCount}">
+                        <div class="option-row">
+                            <input type="radio" name="correct-${questionCount}" value="0" checked style="width: auto; margin-right: 10px;">
+                            <input type="text" class="form-control option-input" placeholder="ตัวเลือกที่ 1" required>
+                        </div>
+                        <div class="option-row">
+                            <input type="radio" name="correct-${questionCount}" value="1" style="width: auto; margin-right: 10px;">
+                            <input type="text" class="form-control option-input" placeholder="ตัวเลือกที่ 2" required>
+                        </div>
+                        <div class="option-row">
+                            <input type="radio" name="correct-${questionCount}" value="2" style="width: auto; margin-right: 10px;">
+                            <input type="text" class="form-control option-input" placeholder="ตัวเลือกที่ 3">
+                        </div>
+                        <div class="option-row">
+                            <input type="radio" name="correct-${questionCount}" value="3" style="width: auto; margin-right: 10px;">
+                            <input type="text" class="form-control option-input" placeholder="ตัวเลือกที่ 4">
+                        </div>
+                        <button type="button" class="add-option-btn" onclick="addOption(${questionCount})">
+                            <i class="fas fa-plus"></i> เพิ่มตัวเลือก
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('questionsContainer').insertAdjacentHTML('beforeend', questionHTML);
+        }
+
+        function deleteQuestion(id) {
+            document.getElementById(`question-${id}`).remove();
+        }
+
+        function setQuestionType(questionId, type) {
+            const buttons = document.querySelectorAll(`#question-${questionId} .type-btn`);
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            event.target.closest('.type-btn').classList.add('active');
+            
+            const optionsContainer = document.getElementById(`options-${questionId}`);
+            
+            if (type === 'multiple') {
+                optionsContainer.style.display = 'block';
+            } else {
+                optionsContainer.style.display = 'none';
+            }
+        }
+
+        function addOption(questionId) {
+            const optionCount = document.querySelectorAll(`#options-${questionId} .option-row`).length + 1;
+            
+            const optionHTML = `
+                <div class="option-row">
+                    <input type="radio" name="correct-${questionId}" value="${optionCount - 1}" style="width: auto; margin-right: 10px;">
+                    <input type="text" class="form-control option-input" placeholder="ตัวเลือกที่ ${optionCount}" required>
+                </div>
+            `;
+            
+            document.getElementById(`options-${questionId}`).insertAdjacentHTML('beforeend', optionHTML);
+        }
+
+        // Add first question by default
+        window.addEventListener('DOMContentLoaded', addQuestion);
+
+        // Form submit
+        document.getElementById('examForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const examTitle = document.getElementById('examTitle').value;
+            const examCode = document.getElementById('examCode').value;
+            
+            alert(`สร้างข้อสอบสำเร็จ!\nชื่อข้อสอบ: ${examTitle}\nรหัสห้อง: ${examCode}`);
+            
+            // In real app, save to database
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
